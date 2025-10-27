@@ -100,76 +100,45 @@ class ProfileExporter:
         """
         filename = f"data_profile_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
         
-        # Prepare data for template
-        template_data = {
-            'export_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'total_tables': len(profile_data),
-            'tables': []
-        }
+        # Simple HTML export to identify the issue
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Data Profile Report</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                .table {{ margin-bottom: 30px; padding: 20px; border: 1px solid #ccc; }}
+                .column {{ margin: 10px 0; padding: 10px; background: #f5f5f5; }}
+            </style>
+        </head>
+        <body>
+            <h1>Data Profile Report</h1>
+            <p>Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <p>Total Tables: {len(profile_data)}</p>
+        """
         
-        # Process each table
         for table_name, table_data in profile_data.items():
             if 'error' in table_data:
-                template_data['tables'].append({
-                    'name': table_name,
-                    'error': table_data['error']
-                })
-                continue
-            
-            # Calculate summary statistics
-            columns_data = table_data.get('columns', {})
-            
-            table_summary = {
-                'name': table_name,
-                'total_records': table_data.get('total_records', 0),
-                'total_columns': table_data.get('total_columns', 0),
-                'profiled_at': table_data.get('profiled_at', ''),
-                'columns': []
-            }
-            
-            # Process each column
-            for col_name, col_data in columns_data.items():
-                column_info = {
-                    'name': col_name,
-                    'data_type': col_data.get('data_type', 'Unknown'),
-                    'null_count': col_data.get('null_count', 0),
-                    'null_percentage': col_data.get('null_percentage', 0),
-                    'blank_count': col_data.get('blank_count', 0),
-                    'blank_percentage': col_data.get('blank_percentage', 0),
-                    'distinct_count': col_data.get('distinct_count', 0),
-                    'distinct_percentage': col_data.get('distinct_percentage', 0),
-                    'quality_score': col_data.get('data_quality_score', 0),
-                    'completeness': col_data.get('completeness', 0),
-                    'uniqueness': col_data.get('uniqueness', 0),
-                    'potential_issues': col_data.get('potential_issues', [])
-                }
-                
-                # Add type-specific data
-                if col_data.get('data_type') in ['int64', 'float64', 'numeric']:
-                    column_info.update({
-                        'min_value': col_data.get('min_value'),
-                        'max_value': col_data.get('max_value'),
-                        'average': col_data.get('average'),
-                        'median': col_data.get('median'),
-                        'std_dev': col_data.get('standard_deviation')
-                    })
-                
-                elif col_data.get('data_type') in ['object', 'string']:
-                    column_info.update({
-                        'avg_length': col_data.get('avg_length'),
-                        'min_length': col_data.get('min_length'),
-                        'max_length': col_data.get('max_length'),
-                        'patterns': col_data.get('patterns', [])[:5],  # Top 5 patterns
-                        'common_values': col_data.get('most_common_values', [])[:5]  # Top 5 values
-                    })
-                
-                table_summary['columns'].append(column_info)
-            
-            template_data['tables'].append(table_summary)
+                html_content += f"""
+                <div class="table">
+                    <h2>{table_name}</h2>
+                    <p style="color: red;">Error: {table_data['error']}</p>
+                </div>
+                """
+            else:
+                html_content += f"""
+                <div class="table">
+                    <h2>{table_name}</h2>
+                    <p>Records: {table_data.get('total_records', 'N/A')}</p>
+                    <p>Columns: {table_data.get('total_columns', 'N/A')}</p>
+                </div>
+                """
         
-        # Render HTML template
-        template = Template(self.export_templates['html'])
-        html_content = template.render(**template_data)
+        html_content += """
+        </body>
+        </html>
+        """
         
         return html_content, filename
     
