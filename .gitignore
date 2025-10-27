@@ -260,7 +260,7 @@ dist
 ehthumbs.db
 Thumbs.db
 
-# DView specific
+# DProf specific
 backend/temp/
 backend/exports/
 backend/.env

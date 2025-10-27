@@ -1,6 +1,6 @@
-# Contributing to DView
+# Contributing to DProf
 
-Thank you for your interest in contributing to DView! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to DProf! This document provides guidelines and information for contributors.
 
 ## 🚀 Getting Started
 
@@ -15,8 +15,8 @@ Thank you for your interest in contributing to DView! This document provides gui
 1. **Fork and Clone**
 
    ```bash
-   git clone https://github.com/yourusername/dview.git
-   cd dview
+   git clone https://github.com/yourusername/dprof.git
+   cd dprof
    ```
 
 2. **Run Setup Script**
@@ -309,6 +309,6 @@ Contributors will be recognized in:
 
 - **Issues**: GitHub Issues
 - **Discussions**: GitHub Discussions
-- **Security**: security@dview.com
+- **Security**: security@dprof.com
 
-Thank you for contributing to DView! 🚀
+Thank you for contributing to DProf! 🚀

@@ -7,7 +7,7 @@ import uvicorn
 def start_backend():
     """Start the FastAPI backend server"""
     try:
-        print("🚀 Starting DView Backend Server...")
+        print("🚀 Starting DProf Backend Server...")
         print("📍 Server will be available at: http://localhost:8000")
         print("📖 API Documentation: http://localhost:8000/docs")
         print("⏹️  Press Ctrl+C to stop the server\n")

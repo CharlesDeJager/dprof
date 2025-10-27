@@ -142,7 +142,7 @@ function App() {
       <Header className='app-header'>
         <div className='header-content'>
           <div className='logo'>
-            <h1>📊 DView</h1>
+            <h1>📊 DProf</h1>
             <span>Data Profiling Application</span>
           </div>
           {currentStep > 0 && (
@@ -179,7 +179,7 @@ function App() {
       <Footer className='app-footer'>
         <div className='footer-content'>
           <p>
-            © 2024 DView Data Profiling Application. Built with React, FastAPI,
+            © 2024 DProf Data Profiling Application. Built with React, FastAPI,
             and modern data analysis tools.
           </p>
           {settings && (

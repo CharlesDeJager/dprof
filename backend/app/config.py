@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     
     class Config:
         env_file = ".env"
-        env_prefix = "DVIEW_"
+        env_prefix = "DPROF_"
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Git Helper Script for DView Development
+# Git Helper Script for DProf Development
 # Provides common Git operations with validation
 
-echo "🔧 DView Git Helper"
+echo "🔧 DProf Git Helper"
 echo "=================="
 
 # Colors for output
@@ -158,7 +158,7 @@ prepare_pr() {
     git push -u origin "$CURRENT_BRANCH"
     
     print_success "Branch ready for pull request!"
-    print_info "Create PR at: https://github.com/yourusername/dview/compare/$CURRENT_BRANCH"
+    print_info "Create PR at: https://github.com/yourusername/dprof/compare/$CURRENT_BRANCH"
 }
 
 # Function to clean up merged branches

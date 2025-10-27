@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# DView Setup Script
-# This script sets up the complete DView application
+# DProf Setup Script
+# This script sets up the complete DProf application
 
-echo "🎯 DView Setup Script"
+echo "🎯 DProf Setup Script"
 echo "====================="
 echo
 
@@ -120,10 +120,10 @@ create_scripts() {
     print_step "Creating startup scripts..."
     
     # Create start script for Unix systems
-    cat > start_dview.sh << 'EOF'
+    cat > start_dprof.sh << 'EOF'
 #!/bin/bash
 
-echo "🚀 Starting DView Application..."
+echo "🚀 Starting DProf Application..."
 echo
 
 # Start backend
@@ -145,7 +145,7 @@ FRONTEND_PID=$!
 cd ..
 
 echo
-echo "✅ DView is starting up!"
+echo "✅ DProf is starting up!"
 echo "🌐 Frontend: http://localhost:3000"
 echo "📡 Backend API: http://localhost:8000"
 echo "📖 API Docs: http://localhost:8000/docs"
@@ -155,7 +155,7 @@ echo "⏹️  Press Ctrl+C to stop all servers"
 # Function to cleanup on exit
 cleanup() {
     echo
-    echo "🛑 Shutting down DView..."
+    echo "🛑 Shutting down DProf..."
     kill $BACKEND_PID 2>/dev/null
     kill $FRONTEND_PID 2>/dev/null
     echo "✅ All servers stopped"
@@ -170,12 +170,12 @@ wait
 EOF
 
     # Make the script executable
-    chmod +x start_dview.sh
+    chmod +x start_dprof.sh
     
     # Create Windows batch file
-    cat > start_dview.bat << 'EOF'
+    cat > start_dprof.bat << 'EOF'
 @echo off
-echo 🚀 Starting DView Application...
+echo 🚀 Starting DProf Application...
 echo.
 
 echo 📡 Starting backend server...
@@ -190,7 +190,7 @@ start /B npm start
 cd ..
 
 echo.
-echo ✅ DView is starting up!
+echo ✅ DProf is starting up!
 echo 🌐 Frontend: http://localhost:3000
 echo 📡 Backend API: http://localhost:8000
 echo 📖 API Docs: http://localhost:8000/docs
@@ -200,12 +200,12 @@ echo ⏹️  Close this window to stop the servers
 pause
 EOF
 
-    print_success "Startup scripts created (start_dview.sh and start_dview.bat)"
+    print_success "Startup scripts created (start_dprof.sh and start_dprof.bat)"
 }
 
 # Main setup function
 main() {
-    echo "This script will set up the complete DView application."
+    echo "This script will set up the complete DProf application."
     echo "It will install dependencies and create startup scripts."
     echo
     
@@ -214,7 +214,7 @@ main() {
     check_node
     
     echo
-    print_step "Starting DView setup..."
+    print_step "Starting DProf setup..."
     echo
     
     # Setup components
@@ -225,7 +225,7 @@ main() {
     create_scripts
     
     echo
-    print_success "🎉 DView setup completed successfully!"
+    print_success "🎉 DProf setup completed successfully!"
     echo
     echo "📋 Next steps:"
     echo "  1. Review and edit backend/.env for any custom configuration"
@@ -233,8 +233,8 @@ main() {
     echo "     - Oracle: Install Oracle Instant Client"
     echo "     - SQL Server: Install ODBC Driver 17 or 18"
     echo "  3. Run the application:"
-    echo "     - Unix/Linux/macOS: ./start_dview.sh"
-    echo "     - Windows: start_dview.bat"
+    echo "     - Unix/Linux/macOS: ./start_dprof.sh"
+    echo "     - Windows: start_dprof.bat"
     echo "     - Or manually start backend and frontend in separate terminals"
     echo
     echo "📖 For detailed documentation, see README.md"

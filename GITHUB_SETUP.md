@@ -1,6 +1,6 @@
-# 🚀 DView Git Repository Setup Complete!
+# 🚀 DProf Git Repository Setup Complete!
 
-Your DView data profiling application has been successfully initialized as a Git repository with comprehensive GitHub integration.
+Your DProf data profiling application has been successfully initialized as a Git repository with comprehensive GitHub integration.
 
 ## 📋 Repository Status
 
@@ -14,14 +14,14 @@ Your DView data profiling application has been successfully initialized as a Git
 
 ### Option 1: Create New Repository on GitHub
 
-1. Go to [GitHub](https://github.com) and create a new repository named `dview`
+1. Go to [GitHub](https://github.com) and create a new repository named `dprof`
 2. **DON'T** initialize with README, .gitignore, or license (we already have these)
-3. Copy the repository URL (e.g., `https://github.com/yourusername/dview.git`)
+3. Copy the repository URL (e.g., `https://github.com/yourusername/dprof.git`)
 
 ### Option 2: Use GitHub CLI (if installed)
 
 ```bash
-gh repo create dview --public --description "Data Profiling Application with React and FastAPI"
+gh repo create dprof --public --description "Data Profiling Application with React and FastAPI"
 ```
 
 ## 🚀 Push to GitHub
@@ -30,7 +30,7 @@ Once you have the GitHub repository URL, run these commands:
 
 ```bash
 # Add the remote repository
-git remote add origin https://github.com/yourusername/dview.git
+git remote add origin https://github.com/charlesdejager/dprof.git
 
 # Push all commits and set upstream
 git push -u origin main
@@ -39,7 +39,7 @@ git push -u origin main
 ## 📁 Repository Structure
 
 ```
-dview/
+dprof/
 ├── 📄 README.md              # Comprehensive documentation
 ├── 📄 LICENSE                # MIT license
 ├── 📄 CHANGELOG.md           # Version history
@@ -74,7 +74,7 @@ dview/
 ### 1. Push to GitHub
 
 ```bash
-git remote add origin https://github.com/yourusername/dview.git
+git remote add origin https://github.com/yourusername/dprof.git
 git push -u origin main
 ```
 
@@ -188,7 +188,7 @@ git push -u origin feature/new-feature
 
 ## 🎉 You're All Set!
 
-Your DView repository is now ready for:
+Your DProf repository is now ready for:
 
 - ✅ Collaborative development
 - ✅ Automated testing and deployment

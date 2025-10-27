@@ -16,7 +16,7 @@ from app.profiler.data_profiler import DataProfiler
 from app.exporters.profile_exporter import ProfileExporter
 from app.config import Settings
 
-app = FastAPI(title="DView - Data Profiling Application", version="1.0.0")
+app = FastAPI(title="DProf - Data Profiling Application", version="1.0.0")
 
 # Configure CORS
 app.add_middleware(
@@ -54,7 +54,7 @@ class ExportRequest(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"message": "DView Data Profiling API", "version": "1.0.0"}
+    return {"message": "DProf Data Profiling API", "version": "1.0.0"}
 
 @app.post("/upload-file")
 async def upload_file(file: UploadFile = File(...)):

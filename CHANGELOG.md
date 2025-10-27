@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the DView project will be documented in this file.
+All notable changes to the DProf project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial release of DView Data Profiling Application
+- Initial release of DProf Data Profiling Application
 - Support for CSV, JSON, XLSX, and XLS file formats
 - Oracle and SQL Server database connectivity
 - Parallel data processing with configurable threading
@@ -81,4 +81,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-For more details about each release, see the [GitHub releases page](https://github.com/yourusername/dview/releases).
+For more details about each release, see the [GitHub releases page](https://github.com/yourusername/dprof/releases).

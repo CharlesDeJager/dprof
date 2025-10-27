@@ -1,6 +1,6 @@
-# DView - Data Profiling Application
+# DProf - Data Profiling Application
 
-![DView Logo](https://img.shields.io/badge/DView-Data%20Profiling-blue?style=for-the-badge)
+![DProf Logo](https://img.shields.io/badge/DProf-Data%20Profiling-blue?style=for-the-badge)
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![React](https://img.shields.io/badge/react-18.2+-61dafb.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
@@ -59,8 +59,8 @@ A comprehensive data profiling application that analyzes data in files (CSV, JSO
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/dview.git
-   cd dview
+   git clone https://github.com/yourusername/dprof.git
+   cd dprof
    ```
 
 2. **Set up the backend**
@@ -182,17 +182,17 @@ Create a `.env` file in the backend directory:
 
 ```bash
 # Performance Settings
-DVIEW_MAX_THREADS=4
-DVIEW_DEFAULT_MAX_RECORDS=10000
-DVIEW_CHUNK_SIZE=1000
+DPROF_MAX_THREADS=4
+DPROF_DEFAULT_MAX_RECORDS=10000
+DPROF_CHUNK_SIZE=1000
 
 # File Settings
-DVIEW_MAX_FILE_SIZE=104857600
-DVIEW_TEMP_DIR=temp
-DVIEW_EXPORT_DIR=exports
+DPROF_MAX_FILE_SIZE=104857600
+DPROF_TEMP_DIR=temp
+DPROF_EXPORT_DIR=exports
 
 # Database Settings (optional)
-DVIEW_ORACLE_CLIENT_PATH=/path/to/oracle/client
+DPROF_ORACLE_CLIENT_PATH=/path/to/oracle/client
 ```
 
 ### Database Setup
@@ -249,7 +249,7 @@ frontend/
 
 ### Column Analysis
 
-For each column, DView provides:
+For each column, DProf provides:
 
 #### Basic Statistics
 
@@ -315,7 +315,7 @@ Automatic identification of:
 
 ### Pattern Analysis
 
-For string columns, DView automatically detects:
+For string columns, DProf automatically detects:
 
 - **Format patterns**: Phone numbers, emails, IDs
 - **Length patterns**: Fixed vs variable length fields
@@ -432,10 +432,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **📧 Email**: support@dview.com
-- **🐛 Issues**: [GitHub Issues](https://github.com/yourusername/dview/issues)
-- **📖 Documentation**: [Full Documentation](https://docs.dview.com)
-- **💬 Discussions**: [GitHub Discussions](https://github.com/yourusername/dview/discussions)
+- **📧 Email**: support@dprof.com
+- **🐛 Issues**: [GitHub Issues](https://github.com/yourusername/dprof/issues)
+- **📖 Documentation**: [Full Documentation](https://docs.dprof.com)
+- **💬 Discussions**: [GitHub Discussions](https://github.com/yourusername/dprof/discussions)
 
 ---
 
