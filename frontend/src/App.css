@@ -1,0 +1,345 @@
+/* Global Styles */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f0f2f5;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Layout Styles */
+.app-layout {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.app-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.header-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 28px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.logo span {
+  color: #8c8c8c;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.back-button {
+  color: #667eea;
+  font-weight: 500;
+}
+
+.back-button:hover {
+  color: #5a6fd8;
+  background-color: rgba(102, 126, 234, 0.1);
+}
+
+.app-content {
+  background: transparent;
+  padding: 0;
+  min-height: calc(100vh - 140px);
+}
+
+.content-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.steps-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.progress-steps {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.step-content {
+  min-height: 400px;
+}
+
+.app-footer {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  text-align: center;
+  padding: 20px 24px;
+  border-top: 1px solid #e8e8e8;
+}
+
+.footer-content p {
+  margin: 0 0 8px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.settings-info {
+  color: #8c8c8c;
+  font-size: 12px;
+}
+
+/* Component Enhancements */
+.ant-card {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  border: none !important;
+}
+
+.ant-card-head {
+  border-bottom: 1px solid #f0f0f0 !important;
+  padding: 16px 24px !important;
+}
+
+.ant-card-head-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #262626 !important;
+}
+
+.ant-card-body {
+  padding: 24px !important;
+}
+
+.ant-btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+}
+
+.ant-btn-primary:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4) !important;
+}
+
+.ant-progress-bg {
+  border-radius: 4px !important;
+}
+
+.ant-progress-success-bg {
+  background: linear-gradient(90deg, #52c41a, #389e0d) !important;
+}
+
+.ant-steps-item-process .ant-steps-item-icon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-color: transparent !important;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon {
+  background: #52c41a !important;
+  border-color: #52c41a !important;
+}
+
+.ant-table-thead > tr > th {
+  background: #fafafa !important;
+  font-weight: 600 !important;
+  color: #262626 !important;
+  border-bottom: 2px solid #f0f0f0 !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: #f0f8ff !important;
+}
+
+.ant-tag {
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+}
+
+.ant-statistic-title {
+  color: #8c8c8c !important;
+  font-weight: 500 !important;
+  margin-bottom: 4px !important;
+}
+
+.ant-statistic-content {
+  color: #262626 !important;
+  font-weight: 600 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .app-header {
+    height: 64px;
+  }
+
+  .logo h1 {
+    font-size: 24px;
+  }
+
+  .header-content {
+    padding: 0 16px;
+  }
+
+  .content-wrapper {
+    padding: 20px 16px;
+  }
+
+  .steps-container {
+    padding: 20px;
+  }
+
+  .ant-steps-horizontal.ant-steps-label-horizontal {
+    flex-direction: column;
+  }
+
+  .ant-steps-horizontal.ant-steps-label-horizontal .ant-steps-item {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-content {
+    flex-direction: column;
+    gap: 12px;
+    height: auto;
+    padding: 16px;
+  }
+
+  .app-header {
+    height: auto;
+    min-height: 64px;
+  }
+
+  .logo {
+    flex-direction: column;
+    text-align: center;
+    gap: 4px;
+  }
+
+  .progress-steps .ant-steps-item-title {
+    font-size: 14px !important;
+  }
+
+  .progress-steps .ant-steps-item-description {
+    font-size: 12px !important;
+  }
+}
+
+/* Custom Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.step-content > * {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.ant-card {
+  animation: slideIn 0.4s ease-out;
+}
+
+/* Loading States */
+.ant-spin-nested-loading > div > .ant-spin {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+.ant-spin-dot-item {
+  background-color: #667eea;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+.mb-24 {
+  margin-bottom: 24px;
+}
+
+.full-width {
+  width: 100%;
+}
