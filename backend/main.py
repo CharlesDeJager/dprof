@@ -45,7 +45,7 @@ class DatabaseConnection(BaseModel):
 class ProfilingRequest(BaseModel):
     session_id: str
     tables: List[str]
-    max_records: Optional[int] = None
+    max_records: Optional[Dict[str, int]] = None
 
 class ExportRequest(BaseModel):
     session_id: str
@@ -62,12 +62,20 @@ async def upload_file(file: UploadFile = File(...)):
     try:
         session_id = str(uuid.uuid4())
         
+        # Validate file
+        if not file.filename:
+            raise HTTPException(status_code=422, detail="No file provided")
+        
+        # Check file size (limit to 100MB)
+        content = await file.read()
+        if len(content) > 100 * 1024 * 1024:  # 100MB
+            raise HTTPException(status_code=422, detail="File size too large (max 100MB)")
+        
         # Save uploaded file temporarily
         temp_dir = f"temp/{session_id}"
         os.makedirs(temp_dir, exist_ok=True)
         file_path = f"{temp_dir}/{file.filename}"
         
-        content = await file.read()
         with open(file_path, "wb") as f:
             f.write(content)
         
@@ -90,8 +98,17 @@ async def upload_file(file: UploadFile = File(...)):
             "structure": structure
         }
     
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        # More specific error messages
+        error_msg = str(e)
+        if "Invalid JSON format" in error_msg:
+            raise HTTPException(status_code=422, detail=f"Invalid JSON file: {error_msg}")
+        elif "Unsupported file type" in error_msg:
+            raise HTTPException(status_code=422, detail=error_msg)
+        else:
+            raise HTTPException(status_code=400, detail=f"File processing error: {error_msg}")
 
 @app.post("/connect-database")
 async def connect_database(connection: DatabaseConnection):
@@ -175,7 +192,7 @@ async def profile_data(request: ProfilingRequest, background_tasks: BackgroundTa
         "message": "Profiling started in background"
     }
 
-async def run_profiling(session_id: str, task_id: str, session_data: Dict, tables: List[str], max_records: Optional[int]):
+async def run_profiling(session_id: str, task_id: str, session_data: Dict, tables: List[str], max_records: Optional[Dict[str, int]]):
     """Background task for data profiling"""
     try:
         if session_data["type"] == "file":

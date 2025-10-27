@@ -22,7 +22,7 @@ class DataProfiler:
         self.db_connector = DatabaseConnector()
         
     async def profile_file_data(self, file_path: str, tables: List[str], 
-                               max_records: Optional[int] = None,
+                               max_records: Optional[Dict[str, int]] = None,
                                progress_callback: Optional[Callable] = None) -> Dict[str, Any]:
         """
         Profile data from files with parallel processing
@@ -35,9 +35,11 @@ class DataProfiler:
             # Submit all profiling tasks
             futures = {}
             for i, table in enumerate(tables):
+                # Get per-table max_records or use None
+                table_max_records = max_records.get(table) if max_records else None
                 future = executor.submit(
                     self._profile_single_table_file,
-                    file_path, table, max_records
+                    file_path, table, table_max_records
                 )
                 futures[future] = (table, i)
             
@@ -60,7 +62,7 @@ class DataProfiler:
         return results
     
     async def profile_database_data(self, connection_info: Dict[str, Any], tables: List[str],
-                                  max_records: Optional[int] = None,
+                                  max_records: Optional[Dict[str, int]] = None,
                                   progress_callback: Optional[Callable] = None) -> Dict[str, Any]:
         """
         Profile data from database with parallel processing
@@ -73,9 +75,11 @@ class DataProfiler:
             # Submit all profiling tasks
             futures = {}
             for i, table in enumerate(tables):
+                # Get per-table max_records or use None
+                table_max_records = max_records.get(table) if max_records else None
                 future = executor.submit(
                     self._profile_single_table_database,
-                    connection_info, table, max_records
+                    connection_info, table, table_max_records
                 )
                 futures[future] = (table, i)
             

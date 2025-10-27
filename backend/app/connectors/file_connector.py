@@ -38,13 +38,18 @@ class FileConnector:
             
             elif file_ext == '.json':
                 # JSON can have multiple arrays
-                with open(file_path, 'r') as f:
-                    data = json.load(f)
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    try:
+                        data = json.load(f)
+                    except json.JSONDecodeError as e:
+                        raise Exception(f"Invalid JSON format: {str(e)}")
                 
                 if isinstance(data, dict):
                     # Check for arrays within the JSON
+                    arrays_found = False
                     for key, value in data.items():
                         if isinstance(value, list) and len(value) > 0:
+                            # Handle both array of objects and array of primitives
                             if isinstance(value[0], dict):
                                 columns = list(value[0].keys()) if value else []
                                 structure["sheets"].append({
@@ -52,15 +57,57 @@ class FileConnector:
                                     "columns": columns,
                                     "column_count": len(columns)
                                 })
-                elif isinstance(data, list) and len(data) > 0:
-                    # Direct array
-                    if isinstance(data[0], dict):
-                        columns = list(data[0].keys())
+                                arrays_found = True
+                            else:
+                                # Array of primitives - treat as single column
+                                structure["sheets"].append({
+                                    "name": key,
+                                    "columns": [key],
+                                    "column_count": 1
+                                })
+                                arrays_found = True
+                    
+                    if not arrays_found:
+                        # If no arrays found, treat the object itself as data
+                        if data:
+                            columns = list(data.keys())
+                            structure["sheets"].append({
+                                "name": "JSON_Object",
+                                "columns": columns,
+                                "column_count": len(columns)
+                            })
+                        
+                elif isinstance(data, list):
+                    if len(data) > 0:
+                        # Direct array
+                        if isinstance(data[0], dict):
+                            columns = list(data[0].keys())
+                            structure["sheets"].append({
+                                "name": "JSON_Array",
+                                "columns": columns,
+                                "column_count": len(columns)
+                            })
+                        else:
+                            # Array of primitives
+                            structure["sheets"].append({
+                                "name": "JSON_Array",
+                                "columns": ["value"],
+                                "column_count": 1
+                            })
+                    else:
+                        # Empty array
                         structure["sheets"].append({
                             "name": "JSON_Array",
-                            "columns": columns,
-                            "column_count": len(columns)
+                            "columns": [],
+                            "column_count": 0
                         })
+                else:
+                    # Single primitive value
+                    structure["sheets"].append({
+                        "name": "JSON_Value",
+                        "columns": ["value"],
+                        "column_count": 1
+                    })
             
             elif file_ext in ['.xlsx', '.xls']:
                 # Excel files can have multiple sheets
@@ -91,13 +138,24 @@ class FileConnector:
                     return sum(1 for line in f) - 1
             
             elif file_ext == '.json':
-                with open(file_path, 'r') as f:
-                    data = json.load(f)
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    try:
+                        data = json.load(f)
+                    except json.JSONDecodeError as e:
+                        raise Exception(f"Invalid JSON format: {str(e)}")
                 
-                if isinstance(data, dict) and sheet_name in data:
-                    return len(data[sheet_name]) if isinstance(data[sheet_name], list) else 0
+                if isinstance(data, dict):
+                    if sheet_name in data:
+                        value = data[sheet_name]
+                        return len(value) if isinstance(value, list) else 1
+                    elif sheet_name == "JSON_Object":
+                        return 1
+                    else:
+                        return 0
                 elif isinstance(data, list) and sheet_name == "JSON_Array":
                     return len(data)
+                elif sheet_name == "JSON_Value":
+                    return 1
                 else:
                     return 0
             
@@ -121,15 +179,50 @@ class FileConnector:
                 df = pd.read_csv(file_path, nrows=max_records)
             
             elif file_ext == '.json':
-                with open(file_path, 'r') as f:
-                    data = json.load(f)
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    try:
+                        data = json.load(f)
+                    except json.JSONDecodeError as e:
+                        raise Exception(f"Invalid JSON format: {str(e)}")
                 
-                if isinstance(data, dict) and sheet_name in data:
-                    records = data[sheet_name][:max_records] if max_records else data[sheet_name]
-                    df = pd.DataFrame(records)
+                if isinstance(data, dict):
+                    if sheet_name in data:
+                        # Data is nested under a key
+                        value = data[sheet_name]
+                        if isinstance(value, list):
+                            records = value[:max_records] if max_records else value
+                            if len(records) > 0:
+                                if isinstance(records[0], dict):
+                                    df = pd.DataFrame(records)
+                                else:
+                                    # Array of primitives
+                                    df = pd.DataFrame({sheet_name: records})
+                            else:
+                                df = pd.DataFrame()
+                        else:
+                            # Single value
+                            df = pd.DataFrame({sheet_name: [value]})
+                    elif sheet_name == "JSON_Object":
+                        # Treat the entire object as a single record
+                        df = pd.DataFrame([data])
+                    else:
+                        df = pd.DataFrame()
+                        
                 elif isinstance(data, list) and sheet_name == "JSON_Array":
                     records = data[:max_records] if max_records else data
-                    df = pd.DataFrame(records)
+                    if len(records) > 0:
+                        if isinstance(records[0], dict):
+                            df = pd.DataFrame(records)
+                        else:
+                            # Array of primitives
+                            df = pd.DataFrame({"value": records})
+                    else:
+                        df = pd.DataFrame()
+                        
+                elif sheet_name == "JSON_Value":
+                    # Single primitive value
+                    df = pd.DataFrame({"value": [data]})
+                    
                 else:
                     df = pd.DataFrame()
             

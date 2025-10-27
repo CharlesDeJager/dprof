@@ -6,8 +6,8 @@ echo
 # Start backend
 echo "📡 Starting backend server..."
 cd backend
-source venv/bin/activate
-python run_server.py &
+export DYLD_LIBRARY_PATH=/opt/homebrew/lib:/opt/homebrew/opt/unixodbc/lib:$DYLD_LIBRARY_PATH
+./venv/bin/python run_server.py start &
 BACKEND_PID=$!
 cd ..
 

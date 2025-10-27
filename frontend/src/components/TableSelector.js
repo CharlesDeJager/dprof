@@ -100,13 +100,20 @@ const TableSelector = ({ dataSource, onProfilingStart }) => {
     setLoading(true);
 
     try {
+      // Build per-table max_records object, filtering out undefined/null values
+      const maxRecordsObj = selectedTables.reduce((acc, tableName) => {
+        const maxRec = maxRecords[tableName];
+        if (maxRec && maxRec > 0) {
+          acc[tableName] = maxRec;
+        }
+        return acc;
+      }, {});
+
       const profilingRequest = {
         session_id: dataSource.sessionId,
         tables: selectedTables,
-        max_records: selectedTables.reduce((acc, tableName) => {
-          acc[tableName] = maxRecords[tableName];
-          return acc;
-        }, {}),
+        max_records:
+          Object.keys(maxRecordsObj).length > 0 ? maxRecordsObj : null,
       };
 
       const result = await ApiService.startProfiling(profilingRequest);
