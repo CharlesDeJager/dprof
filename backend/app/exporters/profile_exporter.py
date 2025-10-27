@@ -96,49 +96,514 @@ class ProfileExporter:
     
     async def export_to_html(self, profile_data: Dict[str, Any]) -> Tuple[str, str]:
         """
-        Export profiling results to clean, navigable HTML format
+        Export profiling results to enhanced HTML format with comprehensive styling
         """
         filename = f"data_profile_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
         
-        # Simple HTML export to identify the issue
-        html_content = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Data Profile Report</title>
-            <style>
-                body {{ font-family: Arial, sans-serif; margin: 20px; }}
-                .table {{ margin-bottom: 30px; padding: 20px; border: 1px solid #ccc; }}
-                .column {{ margin: 10px 0; padding: 10px; background: #f5f5f5; }}
-            </style>
-        </head>
-        <body>
-            <h1>Data Profile Report</h1>
-            <p>Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
-            <p>Total Tables: {len(profile_data)}</p>
-        """
+        # Calculate summary statistics
+        total_columns = 0
+        total_rows = 0
+        quality_issues = 0
         
         for table_name, table_data in profile_data.items():
-            if 'error' in table_data:
+            if isinstance(table_data, dict):
+                if 'total_rows' in table_data:
+                    total_rows += table_data.get('total_rows', 0)
+                if 'columns' in table_data:
+                    total_columns += len(table_data['columns'])
+                    for col_data in table_data['columns'].values():
+                        if isinstance(col_data, dict):
+                            null_pct = col_data.get('null_percentage', 0)
+                            if null_pct > 10:  # Consider >10% nulls as quality issue
+                                quality_issues += 1
+        
+        # Enhanced HTML export with comprehensive styling and data visualization
+        html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Profile Report</title>
+    <style>
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }}
+        
+        body {{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }}
+        
+        .container {{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }}
+        
+        .header {{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }}
+        
+        .header h1 {{
+            font-size: 3em;
+            margin-bottom: 15px;
+            font-weight: 300;
+        }}
+        
+        .header .meta {{
+            font-size: 1.2em;
+            opacity: 0.95;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+        }}
+        
+        .summary-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }}
+        
+        .summary-card {{
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }}
+        
+        .summary-card:hover {{
+            transform: translateY(-5px);
+        }}
+        
+        .summary-card h3 {{
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }}
+        
+        .summary-card p {{
+            color: #666;
+            font-size: 1.1em;
+        }}
+        
+        .table-section {{
+            background: white;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }}
+        
+        .table-header {{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }}
+        
+        .table-header:hover {{
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        }}
+        
+        .table-header h2 {{
+            font-size: 1.5em;
+            font-weight: 500;
+        }}
+        
+        .table-stats {{
+            font-size: 1em;
+            opacity: 0.95;
+        }}
+        
+        .table-content {{
+            padding: 0;
+            display: block;
+        }}
+        
+        .columns-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            padding: 25px;
+        }}
+        
+        .column-card {{
+            border: 1px solid #e0e6ed;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fafbfc;
+        }}
+        
+        .column-header {{
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }}
+        
+        .column-name {{
+            font-weight: 600;
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }}
+        
+        .column-type {{
+            color: #667eea;
+            font-size: 0.95em;
+            font-weight: 500;
+            background: #e8f0fe;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }}
+        
+        .column-body {{
+            padding: 20px;
+        }}
+        
+        .stat-grid {{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }}
+        
+        .stat-item {{
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }}
+        
+        .stat-label {{
+            color: #666;
+            font-size: 0.9em;
+            font-weight: 500;
+        }}
+        
+        .stat-value {{
+            font-weight: 600;
+            color: #2c3e50;
+        }}
+        
+        .quality-score {{
+            background: #e9ecef;
+            height: 12px;
+            border-radius: 6px;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+        }}
+        
+        .quality-fill {{
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }}
+        
+        .quality-excellent {{ background: linear-gradient(90deg, #10ac84, #0abde3); }}
+        .quality-good {{ background: linear-gradient(90deg, #48dbfb, #0abde3); }}
+        .quality-fair {{ background: linear-gradient(90deg, #feca57, #48dbfb); }}
+        .quality-poor {{ background: linear-gradient(90deg, #ff6b6b, #feca57); }}
+        
+        .quality-label {{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }}
+        
+        .issues-list {{
+            margin-top: 15px;
+        }}
+        
+        .issue-item {{
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin: 5px 0;
+            font-size: 0.9em;
+            color: #856404;
+        }}
+        
+        .error-section {{
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px;
+        }}
+        
+        .error-title {{
+            color: #721c24;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }}
+        
+        .error-message {{
+            color: #721c24;
+            font-family: 'Courier New', monospace;
+            background: #f1b0b7;
+            padding: 10px;
+            border-radius: 5px;
+        }}
+        
+        .toggle-arrow {{
+            transition: transform 0.3s ease;
+        }}
+        
+        .toggle-arrow.open {{
+            transform: rotate(180deg);
+        }}
+        
+        @media (max-width: 768px) {{
+            .header .meta {{
+                flex-direction: column;
+                gap: 10px;
+            }}
+            
+            .columns-grid {{
+                grid-template-columns: 1fr;
+            }}
+            
+            .stat-grid {{
+                grid-template-columns: 1fr;
+            }}
+        }}
+    </style>
+    <script>
+        function toggleTable(tableId) {{
+            const content = document.getElementById(tableId);
+            const arrow = document.getElementById(tableId + '_arrow');
+            
+            if (content.style.display === 'none') {{
+                content.style.display = 'block';
+                arrow.classList.add('open');
+            }} else {{
+                content.style.display = 'none';
+                arrow.classList.remove('open');
+            }}
+        }}
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Data Profile Report</h1>
+            <div class="meta">
+                <div>🗓️ Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</div>
+                <div>📋 Tables: {len(profile_data)}</div>
+                <div>🔍 DProf Analysis</div>
+            </div>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <h3>{len(profile_data)}</h3>
+                <p>Tables Analyzed</p>
+            </div>
+            <div class="summary-card">
+                <h3>{total_columns:,}</h3>
+                <p>Total Columns</p>
+            </div>
+            <div class="summary-card">
+                <h3>{total_rows:,}</h3>
+                <p>Total Records</p>
+            </div>
+            <div class="summary-card">
+                <h3>{quality_issues}</h3>
+                <p>Quality Issues</p>
+            </div>
+        </div>"""
+        
+        # Add detailed table sections
+        for table_name, table_data in profile_data.items():
+            table_id = f"table_{hash(table_name) % 10000}"
+            
+            if isinstance(table_data, dict):
+                # Get table-level stats
+                row_count = table_data.get('total_rows', 0)
+                col_count = len(table_data.get('columns', {}))
+                
                 html_content += f"""
-                <div class="table">
-                    <h2>{table_name}</h2>
-                    <p style="color: red;">Error: {table_data['error']}</p>
+        <div class="table-section">
+            <div class="table-header" onclick="toggleTable('{table_id}')">
+                <h2>📋 {table_name}</h2>
+                <div class="table-stats">
+                    {row_count:,} rows • {col_count} columns 
+                    <span class="toggle-arrow" id="{table_id}_arrow">▼</span>
                 </div>
-                """
+            </div>
+            <div class="table-content" id="{table_id}">"""
+                
+                if 'error' in table_data:
+                    html_content += f"""
+                <div class="error-section">
+                    <div class="error-title">❌ Processing Error</div>
+                    <div class="error-message">{table_data['error']}</div>
+                </div>"""
+                elif 'columns' in table_data:
+                    html_content += '<div class="columns-grid">'
+                    
+                    for col_name, col_data in table_data['columns'].items():
+                        if isinstance(col_data, dict):
+                            # Calculate data quality score
+                            null_pct = col_data.get('null_percentage', 0)
+                            quality_score = max(0, 100 - null_pct)
+                            
+                            if quality_score >= 95:
+                                quality_class = 'quality-excellent'
+                                quality_text = 'Excellent'
+                            elif quality_score >= 80:
+                                quality_class = 'quality-good' 
+                                quality_text = 'Good'
+                            elif quality_score >= 60:
+                                quality_class = 'quality-fair'
+                                quality_text = 'Fair'
+                            else:
+                                quality_class = 'quality-poor'
+                                quality_text = 'Poor'
+                            
+                            html_content += f"""
+                    <div class="column-card">
+                        <div class="column-header">
+                            <div class="column-name">🔍 {col_name}</div>
+                            <div class="column-type">{col_data.get('data_type', 'Unknown')}</div>
+                        </div>
+                        <div class="column-body">
+                            <div class="stat-grid">
+                                <div class="stat-item">
+                                    <span class="stat-label">Non-Null Values</span>
+                                    <span class="stat-value">{col_data.get('non_null_count', 'N/A')}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Null Values</span>
+                                    <span class="stat-value">{col_data.get('null_count', 'N/A')}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Null %</span>
+                                    <span class="stat-value">{null_pct:.1f}%</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Unique Values</span>
+                                    <span class="stat-value">{col_data.get('unique_count', 'N/A')}</span>
+                                </div>"""
+                            
+                            # Add numeric statistics if available
+                            if col_data.get('data_type') in ['INTEGER', 'FLOAT', 'DECIMAL', 'NUMERIC']:
+                                html_content += f"""
+                                <div class="stat-item">
+                                    <span class="stat-label">Min Value</span>
+                                    <span class="stat-value">{col_data.get('min_value', 'N/A')}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Max Value</span>
+                                    <span class="stat-value">{col_data.get('max_value', 'N/A')}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Mean</span>
+                                    <span class="stat-value">{col_data.get('mean', 'N/A')}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Std Dev</span>
+                                    <span class="stat-value">{col_data.get('std_dev', 'N/A')}</span>
+                                </div>"""
+                            
+                            # Add string statistics if available
+                            elif col_data.get('data_type') in ['VARCHAR', 'TEXT', 'STRING', 'CHAR']:
+                                html_content += f"""
+                                <div class="stat-item">
+                                    <span class="stat-label">Min Length</span>
+                                    <span class="stat-value">{col_data.get('min_length', 'N/A')}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Max Length</span>
+                                    <span class="stat-value">{col_data.get('max_length', 'N/A')}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Avg Length</span>
+                                    <span class="stat-value">{col_data.get('avg_length', 'N/A')}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Empty Strings</span>
+                                    <span class="stat-value">{col_data.get('empty_count', 'N/A')}</span>
+                                </div>"""
+                            
+                            html_content += f"""
+                            </div>
+                            <div class="quality-score">
+                                <div class="quality-fill {quality_class}" style="width: {quality_score}%"></div>
+                                <div class="quality-label">Data Quality: {quality_text} ({quality_score:.0f}%)</div>
+                            </div>"""
+                            
+                            # Add data quality issues
+                            issues = []
+                            if null_pct > 20:
+                                issues.append(f"High null rate: {null_pct:.1f}%")
+                            if col_data.get('unique_count', 1) == 1:
+                                issues.append("All values are identical")
+                            if col_data.get('data_type') == 'VARCHAR' and col_data.get('max_length', 0) > 1000:
+                                issues.append("Very long text values detected")
+                            
+                            if issues:
+                                html_content += '<div class="issues-list">'
+                                for issue in issues:
+                                    html_content += f'<div class="issue-item">⚠️ {issue}</div>'
+                                html_content += '</div>'
+                            
+                            html_content += """
+                        </div>
+                    </div>"""
+                    
+                    html_content += "</div>"  # Close columns-grid
+                else:
+                    html_content += '<div class="error-section"><div class="error-title">No column data available</div></div>'
+                
+                html_content += """
+            </div>
+        </div>"""
             else:
                 html_content += f"""
-                <div class="table">
-                    <h2>{table_name}</h2>
-                    <p>Records: {table_data.get('total_records', 'N/A')}</p>
-                    <p>Columns: {table_data.get('total_columns', 'N/A')}</p>
-                </div>
-                """
-        
+        <div class="table-section">
+            <div class="table-header">
+                <h2>📋 {table_name}</h2>
+            </div>
+            <div class="error-section">
+                <div class="error-title">❌ Invalid Data Format</div>
+                <div class="error-message">Table data is not in expected format</div>
+            </div>
+        </div>"""
+
         html_content += """
-        </body>
-        </html>
-        """
+    </div>
+</body>
+</html>"""
         
         return html_content, filename
     
